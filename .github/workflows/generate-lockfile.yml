@@ -8,13 +8,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+
+      # 1. 显式安装 Node.js（根据你的项目需求修改版本号）
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18 
+
+      # 2. 安装 pnpm（升级到 v4 版本，兼容性更好）
+      - uses: pnpm/action-setup@v4
         with:
           version: latest
+
+      # 3. 生成锁定文件（追加了关闭冻结锁定的参数）
       - name: Install dependencies and generate lockfile
         run: |
           cd BillNote_frontend
-          pnpm install --lockfile-only
+          pnpm install --lockfile-only --no-frozen-lockfile
+
+      # 4. 上传制品
       - uses: actions/upload-artifact@v4
         with:
           name: pnpm-lock
